@@ -223,8 +223,18 @@ void pivotRPS(int direction)
 }
 
 
+void closestQuarter(float heading) 
+{
+    
+}
 
 
+void checkHeading() 
+{
+    float heading = RPS.Heading();
+    
+    if()
+}
 
 
 
@@ -261,7 +271,7 @@ void liftHeight(int clicks)
         liftMotor.SetPercent(LIFT_SPEED_UP*-1);
 
         // Move for number of counts
-        while(liftEncoder.Counts() <= clicks && TimeNow()-startMeUp<(clicks*.4))
+        while(liftEncoder.Counts() <= clicks && TimeNow()-startMeUp<(clicks*.2))
         {
             if(buttons.LeftPressed()) break;
             //LCD.WriteLine(liftSensor.Value());
@@ -370,7 +380,7 @@ int main(void)
             pivotLeftTurnRPS();
             reverseToWall();
 
-            driveForward(3.0);
+            driveForward(1.0);
             // CHECK RPS Y
 
             pivotRightTurnRPS();
@@ -379,12 +389,14 @@ int main(void)
             //liftHeight(5);
             liftMotor.SetPercent(-50);
             Sleep(.87);
-            driveBackward(4);
+            driveBackward(3);
             liftMotor.SetPercent(0);
             takeBreak();
             pivotLeftTurnRPS();
 
+
             liftHeight(0);
+            Sleep(.3);
 
             driveBackward(0);
             startTime = TimeNow();
@@ -450,7 +462,7 @@ int main(void)
 //goto menu; //Deposit the skid in segment 3
 //segment3:
             Sleep(.5);
-            driveForward(3);
+            driveForward(2);
             pivotRightTurnRPS();
             reverseToWall();
 
@@ -474,7 +486,7 @@ int main(void)
 
             driveBackward(4);
 
-            liftHeight(9);
+            liftHeight(7);
             //liftMotor.SetPercent(-50);
             //Sleep(.6);
             //liftMotor.SetPercent(0);
@@ -492,16 +504,16 @@ int main(void)
             pivotLeftTurnRPS();
             reverseToWall();
             rightMotor.SetPercent(50);
-            Sleep(.4);
-            driveForward(5);
+            Sleep(.7);
+            driveForward(10);
             rightMotor.SetPercent(-50);
-            Sleep(.4);
+            Sleep(.7);
             reverseToWall();
 
             //deposit scoop step 37 CORNER
             if(blue) driveForward(5);
             else driveForward(23);
-            liftHeight(12);
+            liftHeight(15);
             //liftMotor.SetPercent(-60); Sleep(1.2); liftMotor.SetPercent(0);
             reverseToWall();
 
@@ -525,7 +537,7 @@ int main(void)
             Sleep(.5);
             //Drive up ramp step 48
             driveForward(8);
-            pivotRightTurnRPS(); pivotRightTurnRPS(); leftMotor.SetPercent(50); Sleep(.4); stop();
+            pivotRightTurnRPS(); pivotRightTurnRPS(); /*leftMotor.SetPercent(50);*/ Sleep(.4); stop();
             reverseToWallHigh();
 
             //Position ourselves in front of switch
