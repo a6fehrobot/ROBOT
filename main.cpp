@@ -218,49 +218,16 @@ void pivotRPS(int direction)
                     stop();
                 }
             }
-}}
-
+    }
     stop();
-
-
-
-// while(startHeading != 0 && RPS.Heading() != 0)
-// {
-// LCD.WriteLine(RPS.Heading());
-
-// if(direction == 1)
-// {
-// if(startHeading < 90)
-// {
-// startHeading += 90;
-// }
-// else
-// {
-// startHeading -= 90;
-// }
-// if(isCloseTo((double)(startHeading), (double)(RPS.Heading()))) break;
-// if(RPS.Heading()<startHeading)
-// { leftMotor.SetPercent(-40); rightMotor.SetPercent(40); Sleep(.2); stop();}
-// else {leftMotor.SetPercent(40); rightMotor.SetPercent(-40); Sleep(.2); stop();}
-// }
-// else
-// {
-// if(startHeading>90)
-// {
-// startHeading+=90;
-// }
-// else
-// {
-// startHeading-=90;
-// }
-// if(isCloseTo(startHeading, RPS.Heading())) break;
-// if(RPS.Heading()<startHeading)
-// { leftMotor.SetPercent(-40); rightMotor.SetPercent(40); Sleep(.2); stop();}
-// else {leftMotor.SetPercent(40); rightMotor.SetPercent(-40); Sleep(.2); stop();}
-// }
-// }
-
 }
+
+
+
+
+
+
+
 
 // Readable function names for pivoting
 void pivotRightTurnRPS() { pivot(0); }
@@ -362,23 +329,9 @@ int main(void)
     LCD.SetFontColor(FEHLCD::White);
 
     // Initialize the positioning system
-   //RPS.InitializeMenu();
-    //RPS.Enable();
-/*
-while(true)
-{
-if(backButtonLeft.Value()==0)
-{
-Sleep(.8);
-pivotLeftTurnRPS();
-}
-if(backButtonRight.Value()==0)
-{
-Sleep(.8);
-pivotRightTurnRPS();
-}
-}
-*/
+    RPS.InitializeMenu();
+    RPS.Enable();
+
 
 
 
@@ -466,7 +419,7 @@ pivotRightTurnRPS();
             //goto menu; //Segment 2 will Read the light
 
 //segment2:
-  Sleep(.2);
+            Sleep(.2);
             reverseToWall(); //Drive back until the counter is hit
 
             parity = 1; //Find the light
@@ -496,229 +449,139 @@ pivotRightTurnRPS();
 
 //goto menu; //Deposit the skid in segment 3
 //segment3:
-Sleep(.5);
-driveForward(3);
-pivotRightTurnRPS();
-reverseToWall();
+            Sleep(.5);
+            driveForward(3);
+            pivotRightTurnRPS();
+            reverseToWall();
 
-//Check if we hit the chiller door and messed up that way
-if(backButtonLeft.Value()==0&&backButtonRight.Value()==1)
-{
-    driveForward(2);
-    rightMotor.SetPercent(40);
-    Sleep(.2);
-    reverseToWall();
-}
+            //Check if we hit the chiller door and messed up that way
+            if(backButtonLeft.Value()==0&&backButtonRight.Value()==1)
+            {
+                driveForward(2);
+                rightMotor.SetPercent(40);
+                Sleep(.2);
+                reverseToWall();
+            }
 
-driveForward(1);
-pivotLeftTurnRPS(); //Now I'm facing the chiller
-reverseToWall();
+            driveForward(1);
+            pivotLeftTurnRPS(); //Now I'm facing the chiller
+            reverseToWall();
 
-//Deposit skid in chiller step 28
-driveForward(12);
+            //Deposit skid in chiller step 28
+            driveForward(12);
 
-liftHeight(0);
+            liftHeight(0);
 
-driveBackward(4);
+            driveBackward(4);
 
-liftHeight(9);
-//liftMotor.SetPercent(-50);
-//Sleep(.6);
-//liftMotor.SetPercent(0);
-driveForward(12);
+            liftHeight(9);
+            //liftMotor.SetPercent(-50);
+            //Sleep(.6);
+            //liftMotor.SetPercent(0);
+            driveForward(12);
 
-//move to corner to begin scoop dropping step 33
-reverseToWall(); //Skid is all good
+            //move to corner to begin scoop dropping step 33
+            reverseToWall(); //Skid is all good
 
-//goto menu; //End segment3
-//segment4:
-Sleep(.3);
+            //goto menu; //End segment3
+            //segment4:
+            Sleep(.3);
 
-//Get to the front corner of the shop
-driveForward(2);
-pivotLeftTurnRPS();
-reverseToWall();
-rightMotor.SetPercent(50);
-Sleep(.4);
-driveForward(5);
-rightMotor.SetPercent(-50);
-Sleep(.4);
-reverseToWall();
+            //Get to the front corner of the shop
+            driveForward(2);
+            pivotLeftTurnRPS();
+            reverseToWall();
+            rightMotor.SetPercent(50);
+            Sleep(.4);
+            driveForward(5);
+            rightMotor.SetPercent(-50);
+            Sleep(.4);
+            reverseToWall();
 
-//deposit scoop step 37 CORNER
-if(blue) driveForward(5);
-else driveForward(23);
-liftHeight(12);
-//liftMotor.SetPercent(-60); Sleep(1.2); liftMotor.SetPercent(0);
-reverseToWall();
+            //deposit scoop step 37 CORNER
+            if(blue) driveForward(5);
+            else driveForward(23);
+            liftHeight(12);
+            //liftMotor.SetPercent(-60); Sleep(1.2); liftMotor.SetPercent(0);
+            reverseToWall();
 
-liftHeight(0);
+            liftHeight(0);
 
-//Get away from corner step 40
-leftMotor.SetPercent(50);
-Sleep(1.4);
-driveForward(6);
-leftMotor.SetPercent(-50);
-Sleep(1.4);
-reverseToWall();
+            //Get away from corner step 40
+            leftMotor.SetPercent(50);
+            Sleep(1.4);
+            driveForward(6);
+            leftMotor.SetPercent(-50);
+            Sleep(1.4);
+            reverseToWall();
 
-//Line up to ramp step 44
-driveForward(12);
-pivotRightTurnRPS();
-reverseToWall();
+            //Line up to ramp step 44
+            driveForward(12);
+            pivotRightTurnRPS();
+            reverseToWall();
 
-//goto menu;
-//segment5:
-Sleep(.5);
-//Drive up ramp step 48
-driveForward(8);
-pivotRightTurnRPS(); pivotRightTurnRPS(); leftMotor.SetPercent(50); Sleep(.4); stop();
-reverseToWallHigh();
+            //goto menu;
+            //segment5:
+            Sleep(.5);
+            //Drive up ramp step 48
+            driveForward(8);
+            pivotRightTurnRPS(); pivotRightTurnRPS(); leftMotor.SetPercent(50); Sleep(.4); stop();
+            reverseToWallHigh();
 
-//Position ourselves in front of switch
-int count2 = 0;
-while((backButtonLeft.Value() == 1 || backButtonRight.Value() == 1) && count2 < 2)
-{
-    leftMotor.SetPercent(50);
-    Sleep(.7);
-    driveForward(5);
-    leftMotor.SetPercent(-50);
-    Sleep(.7);
-    reverseToWall();
-    Sleep(.7);
-    count2++;
-}
+            //Position ourselves in front of switch
+            int count2 = 0;
+            while((backButtonLeft.Value() == 1 || backButtonRight.Value() == 1) && count2 < 2)
+            {
+                leftMotor.SetPercent(50);
+                Sleep(.7);
+                driveForward(5);
+                leftMotor.SetPercent(-50);
+                Sleep(.7);
+                reverseToWall();
+                Sleep(.7);
+                count2++;
+            }
 
-reverseToWall();
-
-
-//goto menu;
-//segment6:
-Sleep(.5);
-
-//Turn to face the switch
-driveForward(4);
-pivotLeftTurnRPS(); pivotLeftTurnRPS(); stop();
-
-//Drive to switch then turn it
-driveForward(8);
-pivotLeftTurnRPS();
-
-//Need to test this area more
-
-driveBackward(10);
-rightMotor.SetPercent(-40);
-Sleep(.3);
-rightMotor.SetPercent(0);
-reverseToWall();
+            reverseToWall();
 
 
-driveForward(7);
-rightMotor.SetPercent(50);
-Sleep(.6);
+            //goto menu;
+            //segment6:
+            Sleep(.5);
 
-int oven = RPS.Oven();
-int count=1;
-while(count<oven)
-{
-    driveBackward(2);
-    driveForward(3);
-}
+            //Turn to face the switch
+            driveForward(4);
+            pivotLeftTurnRPS(); pivotLeftTurnRPS(); stop();
 
-rightMotor.SetPercent(50);
-Sleep(.12);
-reverseToWall();
+            //Drive to switch then turn it
+            driveForward(8);
+            pivotLeftTurnRPS();
 
-LCD.WriteLine(TimeNow()-veryStart);
-//driveForward(2);
-//pivotRightTurn();
-//reverseToWall();
+            //Need to test this area more
 
+            driveBackward(10);
+            rightMotor.SetPercent(-40);
+            Sleep(.3);
+            rightMotor.SetPercent(0);
+            reverseToWall();
 
 
-goto menu;
-//End all code
-/*
-driveForward(4);
-pivotLeftTurn();
-reverseToWall();
-pivotRightTurn();
-reverseToWall();
+            driveForward(7);
+            rightMotor.SetPercent(50);
+            Sleep(.6);
 
-liftHeight(0);
+            int oven = RPS.Oven();
+            int count=1;
+            while(count<oven)
+            {
+                driveBackward(2);
+                driveForward(3);
+            }
 
-//Line up with button step 63.
-pivotLeftTurn();
-reverseToWall();
-driveForward(7.8);
-pivotLeftTurn();
-driveForward(35);
+            rightMotor.SetPercent(50);
+            Sleep(.12);
+            reverseToWall();
 
-//************************************************************
-
-//Will put button number code in when we're ready to implement wonka for now default value is assigned
-//Push button step 69
-int ovenTimes = 2;
-for(int i=0; i<ovenTimes; i++)
-{
-driveForward(3);
-driveBackward(2);
-}
-
-//Flip Switch
-driveBackward(13);
-pivotRightTurn();
-reverseToWall();
-
-while(true) //Line up with the switch
-{
-if(backButtonLeft.Value()==0&&backButtonRight.Value()==1)
-break;
-else if(backButtonLeft.Value()==1&&backButtonRight.Value()==1) {driveBackward(-6);}
-else if(backButtonLeft.Value()==0&&backButtonRight.Value()==0)
-{
-
-driveForward(2);
-leftMotor.SetPercent(50); Sleep(.2);
-driveBackward(6);
-Sleep(0.4);
-}
-}
-
-//Lift code for step 78 needed here
-pivotRightTurn();
-reverseToWall();
-driveForward(5);
-pivotRightTurn();
-reverseToWall();
-*/
-
-
-
-        // Press middle button to run again
-        LCD.WriteLine("Run course again? Press middle button");
-    }
-
-    if(false)
-    {
-    //Menu tool
-    menu:
-        while(!buttons.LeftPressed()&&!buttons.MiddlePressed()&&!buttons.RightPressed());
-        if(buttons.LeftPressed())
-        {
-             while(buttons.LeftPressed());
-             //goto segment4;
-        }
-        if(buttons.MiddlePressed())
-        {
-             while(buttons.MiddlePressed());
-             //goto segment5;
-        }
-        if(buttons.RightPressed())
-        {
-             while(buttons.RightPressed());
-             //goto segment6;
-        }
-        //End menu tool
-    }
+            LCD.WriteLine(TimeNow()-veryStart);
+            }
 }
