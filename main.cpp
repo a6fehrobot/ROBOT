@@ -50,7 +50,7 @@ DigitalInputPin backButtonLeft (FEHIO::P2_1);
 #define LEFT_MOTOR_SPEED_MID 59
 #define RIGHT_MOTOR_SPEED_MID 60
 
-#define LEFT_MOTOR_SPEED_LO 56 // PREVIOUSLY 55
+#define LEFT_MOTOR_SPEED_LO 55 // PREVIOUSLY 55
 #define RIGHT_MOTOR_SPEED_LO 55
 
 // Lift motor
@@ -153,13 +153,13 @@ void pivot(int direction)
     // Check which direction to pivot
     if(direction > 0)
     {
-        // TURN LEFT - set motor speeds and directions
+        // TURN RIGHT - set motor speeds and directions
         leftMotor.SetPercent(LEFT_MOTOR_SPEED_LO * -1);
         rightMotor.SetPercent(RIGHT_MOTOR_SPEED_LO);
     }
     else
     {
-        // TURN RIGHT - set motor speeds and directions
+        // TURN LEFT - set motor speeds and directions
         leftMotor.SetPercent(LEFT_MOTOR_SPEED_LO);
         rightMotor.SetPercent(RIGHT_MOTOR_SPEED_LO * -1);
     }
@@ -167,6 +167,7 @@ void pivot(int direction)
     // Wait for proper number of encoder counts
     while(leftEncoder.Counts() <= COUNTS_TO_PIVOT && rightEncoder.Counts() <= COUNTS_TO_PIVOT);
 
+    if(direction==0)
     Sleep(EXTRA_TURN_TIME);
 
     // Stop turning
@@ -385,8 +386,8 @@ int main(void)
     LCD.SetFontColor(FEHLCD::White);
 
     // Initialize the positioning system
-   RPS.InitializeMenu();
-    RPS.Enable();
+   //RPS.InitializeMenu();
+    //RPS.Enable();
 /*
 while(true)
 {
@@ -440,11 +441,11 @@ pivotRightTurnRPS();
             pivotLeftTurnRPS();
             reverseToWall();
 
-            driveForward(4.0);
+            driveForward(3.0);
             // CHECK RPS Y
 
             pivotRightTurnRPS();
-            driveForward(3.0);
+            driveForward(2.0);
 
             //liftHeight(5);
             liftMotor.SetPercent(-50);
