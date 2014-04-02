@@ -197,8 +197,7 @@ void pivotRPS(int direction)
     if (startHeading != 0 && RPS.Heading() != 0) {
         LCD.WriteLine(RPS.Heading());
 
-        if (direction < 1) {
-            // Turn left
+
             if (startHeading < 90) {
                 startHeading += 90;
             } else {
@@ -207,7 +206,7 @@ void pivotRPS(int direction)
 
             // Turn
             while(!isCloseTo((double)(startHeading), (double)(RPS.Heading()))) {
-                if (RPS.Heading() < startHeading) {
+                if (RPS.Heading() > startHeading) {
                     leftMotor.SetPercent(-40);
                     rightMotor.SetPercent(40);
                     Sleep(.2);
@@ -219,30 +218,7 @@ void pivotRPS(int direction)
                     stop();
                 }
             }
-        } else {
-            // Turn right
-            if(startHeading > 90) {
-                startHeading += 90;
-            } else {
-                startHeading -= 90;
-            }
-
-            // Turn
-            while(!isCloseTo((double)(startHeading), (double)(RPS.Heading()))) {
-                if (RPS.Heading() < startHeading) {
-                    leftMotor.SetPercent(40);
-                    rightMotor.SetPercent(-40);
-                    Sleep(.2);
-                    stop();
-                } else {
-                    leftMotor.SetPercent(-40);
-                    rightMotor.SetPercent(40);
-                    Sleep(.2);
-                    stop();
-                }
-            }
-        }
-    }
+}}
 
     stop();
 
@@ -453,7 +429,7 @@ pivotRightTurnRPS();
             driveBackward(4);
             liftMotor.SetPercent(0);
             takeBreak();
-            pivotLeftTurn();
+            pivotLeftTurnRPS();
 
             liftHeight(0);
 
@@ -482,10 +458,10 @@ pivotRightTurnRPS();
             //Navigate down ramp and yada yada step 9
             driveBackward(10);
             liftMotor.SetPercent(0);
-            pivotLeftTurn();
+            pivotLeftTurnRPS();
             driveForward(9); //Now in the center
             takeBreak();
-            pivotRightTurn(); //Turn so as to go down ramp
+            pivotRightTurnRPS(); //Turn so as to go down ramp
 
             //goto menu; //Segment 2 will Read the light
 
@@ -522,7 +498,7 @@ pivotRightTurnRPS();
 //segment3:
 Sleep(.5);
 driveForward(3);
-pivotRightTurn();
+pivotRightTurnRPS();
 reverseToWall();
 
 //Check if we hit the chiller door and messed up that way
@@ -535,7 +511,7 @@ if(backButtonLeft.Value()==0&&backButtonRight.Value()==1)
 }
 
 driveForward(1);
-pivotLeftTurn(); //Now I'm facing the chiller
+pivotLeftTurnRPS(); //Now I'm facing the chiller
 reverseToWall();
 
 //Deposit skid in chiller step 28
@@ -560,7 +536,7 @@ Sleep(.3);
 
 //Get to the front corner of the shop
 driveForward(2);
-pivotLeftTurn();
+pivotLeftTurnRPS();
 reverseToWall();
 rightMotor.SetPercent(50);
 Sleep(.4);
@@ -588,7 +564,7 @@ reverseToWall();
 
 //Line up to ramp step 44
 driveForward(12);
-pivotRightTurn();
+pivotRightTurnRPS();
 reverseToWall();
 
 //goto menu;
@@ -596,7 +572,7 @@ reverseToWall();
 Sleep(.5);
 //Drive up ramp step 48
 driveForward(8);
-pivotRightTurn(); pivotRightTurn(); leftMotor.SetPercent(50); Sleep(.4); stop();
+pivotRightTurnRPS(); pivotRightTurnRPS(); leftMotor.SetPercent(50); Sleep(.4); stop();
 reverseToWallHigh();
 
 //Position ourselves in front of switch
@@ -622,11 +598,11 @@ Sleep(.5);
 
 //Turn to face the switch
 driveForward(4);
-pivotLeftTurn(); pivotLeftTurn(); stop();
+pivotLeftTurnRPS(); pivotLeftTurnRPS(); stop();
 
 //Drive to switch then turn it
 driveForward(8);
-pivotLeftTurn();
+pivotLeftTurnRPS();
 
 //Need to test this area more
 
