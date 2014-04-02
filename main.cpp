@@ -19,7 +19,7 @@ FEHMotor leftMotor(FEHMotor::Motor0);
 FEHMotor rightMotor(FEHMotor::Motor1);
 
 // Lift motor
-FEHMotor liftMotor(FEHMotor::Motor2);
+FEHMotor liftMotor(FEHMotor::Motor3);
 
 // CdS cell on robot bottom
 AnalogInputPin cds(FEHIO::P0_0);
@@ -50,7 +50,7 @@ DigitalInputPin backButtonLeft (FEHIO::P2_1);
 #define LEFT_MOTOR_SPEED_MID 59
 #define RIGHT_MOTOR_SPEED_MID 60
 
-#define LEFT_MOTOR_SPEED_LO 55 // PREVIOUSLY 55
+#define LEFT_MOTOR_SPEED_LO 56 // PREVIOUSLY 55
 #define RIGHT_MOTOR_SPEED_LO 55
 
 // Lift motor
@@ -109,6 +109,8 @@ void drive(float distance, int direction)
 
     // Drive specified number of counts
     while(leftEncoder.Counts() <= numberOfCounts && rightEncoder.Counts() <= numberOfCounts){
+        LCD.WriteLine(leftEncoder.Counts());
+        LCD.WriteLine(rightEncoder.Counts());
     }
 
     // Stop the motors
@@ -116,7 +118,7 @@ void drive(float distance, int direction)
 }
 
 // Readable function names for driving
-void driveForward(double distance)  {
+void driveForward(double distance) {
     if(distance > 0)
     {
         // Distance is specified
@@ -173,7 +175,7 @@ void pivot(int direction)
 
 // Readable function names for pivoting
 void pivotRightTurn() { pivot(0); }
-void pivotLeftTurn()  { pivot(1); }
+void pivotLeftTurn() { pivot(1); }
 
 //---------------------------------RPS Methods experimential-------------------------------------------------------
 
@@ -190,7 +192,7 @@ void pivotRPS(int direction)
     resetEncoders();
 
     double startHeading = RPS.Heading();
-
+    pivot(direction);
     if (startHeading != 0 && RPS.Heading() != 0) {
         LCD.WriteLine(RPS.Heading());
 
@@ -239,72 +241,53 @@ void pivotRPS(int direction)
                 }
             }
         }
-    } else {
-        // Check which direction to pivot
-        if(direction > 0)
-        {
-            // TURN LEFT - set motor speeds and directions
-            leftMotor.SetPercent(LEFT_MOTOR_SPEED_LO * -1);
-            rightMotor.SetPercent(RIGHT_MOTOR_SPEED_LO);
-        }
-        else
-        {
-            // TURN RIGHT - set motor speeds and directions
-            leftMotor.SetPercent(LEFT_MOTOR_SPEED_LO);
-            rightMotor.SetPercent(RIGHT_MOTOR_SPEED_LO * -1);
-        }
-
-        // Wait for proper number of encoder counts
-        while(leftEncoder.Counts() <= COUNTS_TO_PIVOT && rightEncoder.Counts() <= COUNTS_TO_PIVOT);
-
-        Sleep(EXTRA_TURN_TIME);
     }
 
     stop();
 
 
 
-//    while(startHeading != 0 && RPS.Heading() != 0)
-//    {
-//        LCD.WriteLine(RPS.Heading());
+// while(startHeading != 0 && RPS.Heading() != 0)
+// {
+// LCD.WriteLine(RPS.Heading());
 
-//        if(direction == 1)
-//        {
-//            if(startHeading < 90)
-//            {
-//                startHeading += 90;
-//            }
-//            else
-//            {
-//                startHeading -= 90;
-//            }
-//            if(isCloseTo((double)(startHeading), (double)(RPS.Heading()))) break;
-//            if(RPS.Heading()<startHeading)
-//            {    leftMotor.SetPercent(-40); rightMotor.SetPercent(40); Sleep(.2); stop();}
-//            else {leftMotor.SetPercent(40); rightMotor.SetPercent(-40); Sleep(.2); stop();}
-//        }
-//        else
-//        {
-//            if(startHeading>90)
-//            {
-//                startHeading+=90;
-//            }
-//            else
-//            {
-//                startHeading-=90;
-//            }
-//            if(isCloseTo(startHeading, RPS.Heading())) break;
-//            if(RPS.Heading()<startHeading)
-//            {    leftMotor.SetPercent(-40); rightMotor.SetPercent(40); Sleep(.2); stop();}
-//            else {leftMotor.SetPercent(40); rightMotor.SetPercent(-40); Sleep(.2); stop();}
-//        }
-//    }
+// if(direction == 1)
+// {
+// if(startHeading < 90)
+// {
+// startHeading += 90;
+// }
+// else
+// {
+// startHeading -= 90;
+// }
+// if(isCloseTo((double)(startHeading), (double)(RPS.Heading()))) break;
+// if(RPS.Heading()<startHeading)
+// { leftMotor.SetPercent(-40); rightMotor.SetPercent(40); Sleep(.2); stop();}
+// else {leftMotor.SetPercent(40); rightMotor.SetPercent(-40); Sleep(.2); stop();}
+// }
+// else
+// {
+// if(startHeading>90)
+// {
+// startHeading+=90;
+// }
+// else
+// {
+// startHeading-=90;
+// }
+// if(isCloseTo(startHeading, RPS.Heading())) break;
+// if(RPS.Heading()<startHeading)
+// { leftMotor.SetPercent(-40); rightMotor.SetPercent(40); Sleep(.2); stop();}
+// else {leftMotor.SetPercent(40); rightMotor.SetPercent(-40); Sleep(.2); stop();}
+// }
+// }
 
 }
 
 // Readable function names for pivoting
 void pivotRightTurnRPS() { pivot(0); }
-void pivotLeftTurnRPS()  { pivot(1); }
+void pivotLeftTurnRPS() { pivot(1); }
 
 
 
@@ -318,11 +301,11 @@ void liftHeight(int clicks)
 
     // Reset the encoders
     resetEncoders();
-
+    int startMeUp = TimeNow();
     if(clicks < 1)
     {
-        liftMotor.SetPercent(LIFT_SPEED_DOWN * -1);
-        while(liftBottomSwitch.Value() > 0);
+        liftMotor.SetPercent(LIFT_SPEED_DOWN);
+        while(liftBottomSwitch.Value() > 0&&TimeNow()-startMeUp<2.0);
         liftMotor.SetPercent(0);
 
         resetEncoders();
@@ -331,10 +314,10 @@ void liftHeight(int clicks)
     {
         liftHeight(0);
 
-        liftMotor.SetPercent(LIFT_SPEED_UP);
+        liftMotor.SetPercent(LIFT_SPEED_UP*-1);
 
         // Move for number of counts
-        while(liftEncoder.Counts() <= clicks)
+        while(liftEncoder.Counts() <= clicks && TimeNow()-startMeUp<(clicks*.4))
         {
             if(buttons.LeftPressed()) break;
             //LCD.WriteLine(liftSensor.Value());
@@ -352,7 +335,7 @@ void reverseToWall()
     driveBackward(0);
     while(backButtonRight.Value() == 1 && backButtonLeft.Value() == 1) {
     }
-    Sleep(.5);
+    Sleep(.6);
     stop();
 }
 
@@ -390,8 +373,8 @@ int main(void)
     float lowThreshold = 0.388;
     float highThreshold = 1.547;
 
-    float lowThresholdLift = 0.4;
-    float highThresholdLift = 1.7;
+    float lowThresholdLift = 1.1;
+    float highThresholdLift = 1.8;
 
     leftEncoder.SetThresholds(lowThreshold, highThreshold);
     rightEncoder.SetThresholds(lowThreshold, highThreshold);
@@ -402,28 +385,29 @@ int main(void)
     LCD.SetFontColor(FEHLCD::White);
 
     // Initialize the positioning system
-  //   RPS.InitializeMenu();
-   //  RPS.Enable();
+   RPS.InitializeMenu();
+    RPS.Enable();
 /*
-     while(true)
-     {
-         if(backButtonLeft.Value()==0)
-         {
-             Sleep(.8);
-             pivotLeftTurnRPS();
-         }
-         if(backButtonRight.Value()==0)
-         {
-             Sleep(.8);
-             pivotRightTurnRPS();
-         }
-     }
+while(true)
+{
+if(backButtonLeft.Value()==0)
+{
+Sleep(.8);
+pivotLeftTurnRPS();
+}
+if(backButtonRight.Value()==0)
+{
+Sleep(.8);
+pivotRightTurnRPS();
+}
+}
 */
+
 
 
     //The program goes for the objectives in this order: pin, skid, read light, drop skid, drop scoop, flip switch, BUTTON NEEDS IMPLEMENTATION, Charger
     //
-    //          SPACE FOR ERROR LOGGING AND NOTES
+    // SPACE FOR ERROR LOGGING AND NOTES
     //
     //
     //
@@ -437,7 +421,7 @@ int main(void)
 
         //SEgment one will pick up the skid
         //segment1:
-            liftHeight(6);
+            liftHeight(0);
 
             // Move into waitForCdS()
             nolight = cds.Value(); //Wait for the light
@@ -460,15 +444,13 @@ int main(void)
             // CHECK RPS Y
 
             pivotRightTurnRPS();
-            driveForward(4.0);
+            driveForward(3.0);
 
             //liftHeight(5);
-            liftMotor.SetPercent(50);
-            Sleep(.82);
+            liftMotor.SetPercent(-50);
+            Sleep(.87);
+            driveBackward(4);
             liftMotor.SetPercent(0);
-
-
-            driveBackward(2);
             takeBreak();
             pivotLeftTurn();
 
@@ -476,8 +458,8 @@ int main(void)
 
             driveBackward(0);
             startTime = TimeNow();
-            while(TimeNow()-startTime<4.0) {             //Line up with the skid
-                if(backButtonLeft.Value() == 1 && backButtonRight.Value() == 0) { stop(); break; }
+            while(TimeNow()-startTime<4.0) { //Line up with the skid
+                if(backButtonLeft.Value() == 1 && backButtonRight.Value() == 0) { Sleep(.8); stop(); break; }
                 else if(backButtonLeft.Value() == 1 && backButtonRight.Value() == 1) { driveBackward(0); LCD.WriteLine("WHY!"); }
                 else if(backButtonLeft.Value() == 0 && backButtonRight.Value() == 0) {
                     LCD.WriteLine("DrivingLoop");
@@ -493,24 +475,24 @@ int main(void)
 
             //Pick up skid step 6
             driveForward(17);
-            liftMotor.SetPercent(40);
+            liftMotor.SetPercent(-40);
             takeBreak();
 
             //Navigate down ramp and yada yada step 9
             driveBackward(10);
             liftMotor.SetPercent(0);
             pivotLeftTurn();
-            driveForward(9);     //Now in the center
+            driveForward(9); //Now in the center
             takeBreak();
-            pivotRightTurn();    //Turn so as to go down ramp
+            pivotRightTurn(); //Turn so as to go down ramp
 
-            //goto menu;           //Segment 2 will Read the light
+            //goto menu; //Segment 2 will Read the light
 
 //segment2:
   Sleep(.2);
-            reverseToWall();     //Drive back until the counter is hit
+            reverseToWall(); //Drive back until the counter is hit
 
-            parity = 1;      //Find the light
+            parity = 1; //Find the light
             nolight=cds.Value();
             startTime = TimeNow();
             while(std::abs(nolight - cds.Value()) < 0.2 && (TimeNow()-startTime)<3.0) {
@@ -523,7 +505,7 @@ int main(void)
                 }
             }
 
-            blue = 0;                 //Determining the light color
+            blue = 0; //Determining the light color
             startTime = TimeNow();
             while(TimeNow() - startTime < 1.5) {
                 blue = cds.Value() < (nolight - 1) ? 0 : 1; //Look up ternary operator if this confuses you.
@@ -533,7 +515,7 @@ int main(void)
             else LCD.WriteLine("Red, the blood of angry men");
 
             //Deposit skid step 19
-            reverseToWall();                //Back to the counter
+            reverseToWall(); //Back to the counter
 
 //goto menu; //Deposit the skid in segment 3
 //segment3:
@@ -562,9 +544,10 @@ liftHeight(0);
 
 driveBackward(4);
 
-liftMotor.SetPercent(50);
-Sleep(.6);
-liftMotor.SetPercent(0);
+liftHeight(9);
+//liftMotor.SetPercent(-50);
+//Sleep(.6);
+//liftMotor.SetPercent(0);
 driveForward(12);
 
 //move to corner to begin scoop dropping step 33
@@ -588,8 +571,8 @@ reverseToWall();
 //deposit scoop step 37 CORNER
 if(blue) driveForward(5);
 else driveForward(23);
-liftMotor.SetPercent(60); Sleep(1.2);
-liftMotor.SetPercent(0);
+liftHeight(12);
+//liftMotor.SetPercent(-60); Sleep(1.2); liftMotor.SetPercent(0);
 reverseToWall();
 
 liftHeight(0);
@@ -710,19 +693,19 @@ driveBackward(13);
 pivotRightTurn();
 reverseToWall();
 
-while(true)              //Line up with the switch
+while(true) //Line up with the switch
 {
-    if(backButtonLeft.Value()==0&&backButtonRight.Value()==1)
+if(backButtonLeft.Value()==0&&backButtonRight.Value()==1)
 break;
-    else if(backButtonLeft.Value()==1&&backButtonRight.Value()==1) {driveBackward(-6);}
-    else if(backButtonLeft.Value()==0&&backButtonRight.Value()==0)
-    {
+else if(backButtonLeft.Value()==1&&backButtonRight.Value()==1) {driveBackward(-6);}
+else if(backButtonLeft.Value()==0&&backButtonRight.Value()==0)
+{
 
-        driveForward(2);
-        leftMotor.SetPercent(50); Sleep(.2);
-        driveBackward(6);
-        Sleep(0.4);
-    }
+driveForward(2);
+leftMotor.SetPercent(50); Sleep(.2);
+driveBackward(6);
+Sleep(0.4);
+}
 }
 
 //Lift code for step 78 needed here
