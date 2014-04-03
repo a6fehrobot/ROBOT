@@ -64,7 +64,7 @@ DigitalInputPin backButtonLeft (FEHIO::P2_1);
 #define COUNTS_PER_WHEEL 32.0
 #define WHEEL_CIRCUMFERENCE 2.75 * 3.14159
 
-#define COUNTS_TO_PIVOT 20
+#define COUNTS_TO_PIVOT 19
 #define EXTRA_TURN_TIME 0
 
 #define ENCODER_CORRECT 0
@@ -145,7 +145,7 @@ void driveBackward(double distance) {
 }
 
 // Pivot the robot in place
-void pivot(int direction)
+void pivot(int direction, int correction = 0)
 {
     // Reset the encoders
     resetEncoders();
@@ -165,7 +165,7 @@ void pivot(int direction)
     }
 
     // Wait for proper number of encoder counts
-    while(leftEncoder.Counts() <= COUNTS_TO_PIVOT && rightEncoder.Counts() <= COUNTS_TO_PIVOT);
+    while(leftEncoder.Counts() <= (COUNTS_TO_PIVOT + correction) && rightEncoder.Counts() <= (COUNTS_TO_PIVOT + correction));
 
     if(direction==0)
     Sleep(EXTRA_TURN_TIME);
@@ -223,18 +223,18 @@ void pivotRPS(int direction)
 }
 
 
-void closestQuarter(float heading) 
-{
-    
-}
+//void closestQuarter(float heading)
+//{
+
+//}
 
 
-void checkHeading() 
-{
-    float heading = RPS.Heading();
-    
-    if()
-}
+//void checkHeading()
+//{
+//    float heading = RPS.Heading();
+
+//    if()
+//}
 
 
 
@@ -361,7 +361,7 @@ int main(void)
 
         //SEgment one will pick up the skid
         //segment1:
-            liftHeight(0);
+            liftHeight(1);
 
             // Move into waitForCdS()
             nolight = cds.Value(); //Wait for the light
@@ -380,16 +380,30 @@ int main(void)
             pivotLeftTurnRPS();
             reverseToWall();
 
+            startTime = TimeNow();
+            while(TimeNow()-startTime<4.0) { //Line up with the skid
+                if(backButtonLeft.Value() == 1 && backButtonRight.Value() == 0) { Sleep(.8); stop(); break; }
+                else if(backButtonLeft.Value() == 1 && backButtonRight.Value() == 1) { driveBackward(0); LCD.WriteLine("WHY!"); }
+                else if(backButtonLeft.Value() == 0 && backButtonRight.Value() == 0) {
+                    LCD.WriteLine("DrivingLoop");
+                    driveForward(2);
+                    leftMotor.SetPercent(50); Sleep(.2);
+                    driveBackward(0);
+                    Sleep(.4);
+                }
+            }
+
+
             driveForward(1.0);
             // CHECK RPS Y
 
             pivotRightTurnRPS();
-            driveForward(2.0);
+            driveForward(7.0);
 
             //liftHeight(5);
             liftMotor.SetPercent(-50);
             Sleep(.87);
-            driveBackward(3);
+            driveBackward(2);
             liftMotor.SetPercent(0);
             takeBreak();
             pivotLeftTurnRPS();
@@ -423,7 +437,8 @@ int main(void)
             //Navigate down ramp and yada yada step 9
             driveBackward(10);
             liftMotor.SetPercent(0);
-            pivotLeftTurnRPS();
+            pivot(1, -1);
+            stop();
             driveForward(9); //Now in the center
             takeBreak();
             pivotRightTurnRPS(); //Turn so as to go down ramp
@@ -475,7 +490,7 @@ int main(void)
                 reverseToWall();
             }
 
-            driveForward(1);
+            driveForward(.5);
             pivotLeftTurnRPS(); //Now I'm facing the chiller
             reverseToWall();
 
@@ -489,7 +504,7 @@ int main(void)
             liftHeight(7);
             //liftMotor.SetPercent(-50);
             //Sleep(.6);
-            //liftMotor.SetPercent(0);
+            //liftMotor.Set,Percent(0);
             driveForward(12);
 
             //move to corner to begin scoop dropping step 33
@@ -502,14 +517,14 @@ int main(void)
             //Get to the front corner of the shop
             driveForward(2);
             pivotLeftTurnRPS();
-            reverseToWall();
+            reverseToWall();/*
             rightMotor.SetPercent(50);
             Sleep(.7);
             driveForward(10);
             rightMotor.SetPercent(-50);
             Sleep(.7);
             reverseToWall();
-
+*/
             //deposit scoop step 37 CORNER
             if(blue) driveForward(5);
             else driveForward(23);
@@ -573,21 +588,28 @@ int main(void)
 
             driveBackward(10);
             rightMotor.SetPercent(-40);
-            Sleep(.3);
+            Sleep(1.1);
             rightMotor.SetPercent(0);
             reverseToWall();
 
 
             driveForward(7);
-            rightMotor.SetPercent(50);
-            Sleep(.6);
+            pivotRightTurnRPS();
+            reverseToWall();
+
+            driveForward(1);
+            pivotLeftTurnRPS();
+            reverseToWall();
+            driveForward(4);
+            pivotLeftTurnRPS();
 
             int oven = RPS.Oven();
             int count=1;
-            while(count<oven)
+            while(count<oven&&count<3)
             {
                 driveBackward(2);
                 driveForward(3);
+                count++;
             }
 
             rightMotor.SetPercent(50);
