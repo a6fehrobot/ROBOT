@@ -153,13 +153,13 @@ void pivot(int direction, int correction = 0)
     // Check which direction to pivot
     if(direction > 0)
     {
-        // TURN RIGHT - set motor speeds and directions
+        // TURN LEFT - set motor speeds and directions
         leftMotor.SetPercent(LEFT_MOTOR_SPEED_LO * -1);
         rightMotor.SetPercent(RIGHT_MOTOR_SPEED_LO);
     }
     else
     {
-        // TURN LEFT - set motor speeds and directions
+        // TURN RIGHT - set motor speeds and directions
         leftMotor.SetPercent(LEFT_MOTOR_SPEED_LO);
         rightMotor.SetPercent(RIGHT_MOTOR_SPEED_LO * -1);
     }
@@ -441,7 +441,8 @@ int main(void)
             stop();
             driveForward(9); //Now in the center
             takeBreak();
-            pivotRightTurnRPS(); //Turn so as to go down ramp
+
+            pivot(0, -2); //Turn so as to go down ramp
 
             //goto menu; //Segment 2 will Read the light
 
