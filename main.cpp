@@ -405,12 +405,27 @@ int main(void)
 
             pivotRightTurnRPS();
 
+            startTime=TimeNow();
+            while(std::abs(RPS.Heading()-90)>7&&TimeNow()-startTime<.4)
+            {
+                if(RPS.Heading()>90)
+                {
+                    leftMotor.SetPercent(40);
+                    rightMotor.SetPercent(-40);
+                }
+                else
+                {
+                    leftMotor.SetPercent(-40);
+                    rightMotor.SetPercent(40);
+                }
+                stop();
+            }
             /**
-              ******************************
-             *MIKE ADD CODE TO CHECK IF WE
-             *ARE FACING EAST(90) TO GO
-             *TOWARDS THE PIN*
-            ***********************************/
+******************************
+*MIKE ADD CODE TO CHECK IF WE
+*ARE FACING EAST(90) TO GO
+*TOWARDS THE PIN*
+***********************************/
 
 
 
@@ -460,11 +475,11 @@ int main(void)
             liftMotor.SetPercent(0);
             pivot(1, -1);
             /**
-              ******************************
-             *MIKE ADD CODE TO CHECK IF WE
-             *ARE FACING EAST(90) TO GO
-             *TOWARDS THE CENTER OF THE COURSE BACKWARDS*
-            ***********************************/
+******************************
+*MIKE ADD CODE TO CHECK IF WE
+*ARE FACING EAST(90) TO GO
+*TOWARDS THE CENTER OF THE COURSE BACKWARDS*
+***********************************/
             stop();
             driveForward(9); //Now in the center
             takeBreak();
@@ -473,11 +488,11 @@ int main(void)
             pivot(1);
 
             /**
-              ******************************
-             *MIKE ADD CODE TO CHECK IF WE
-             *ARE FACING SOUTH(0) TO GO
-             *TOWARDS THE SWITCH BACKWARDS*
-            ***********************************/
+******************************
+*MIKE ADD CODE TO CHECK IF WE
+*ARE FACING SOUTH(0) TO GO
+*TOWARDS THE SWITCH BACKWARDS*
+***********************************/
 
             driveBackward(-1);
             //Reverse to wall and if stuck move the right motor back
@@ -491,11 +506,11 @@ int main(void)
             pivotRightTurnRPS(); pivotRightTurnRPS(); leftMotor.SetPercent(50); Sleep(.7); stop();
 
             /**
-              ******************************
-             *MIKE ADD CODE TO CHECK IF WE
-             *ARE FACING NORTH(0) TO GO
-             *DOWN THE RAMP BACKWARDS*
-            ***********************************/
+******************************
+*MIKE ADD CODE TO CHECK IF WE
+*ARE FACING NORTH(0) TO GO
+*DOWN THE RAMP BACKWARDS*
+***********************************/
 
             liftMotor.SetPercent(30);
             Sleep(.4);
@@ -625,17 +640,17 @@ reverseToWall();
             pivotRightTurnRPS(); pivotRightTurnRPS(); leftMotor.SetPercent(50); Sleep(.4); stop();
 
             /**
-              ******************************
-             *MIKE ADD CODE TO CHECK IF WE
-             *ARE FACING SOUTH(0) TO GO
-             *UP THE RAMP BACKWARDS*
-            ***********************************/
+******************************
+*MIKE ADD CODE TO CHECK IF WE
+*ARE FACING SOUTH(0) TO GO
+*UP THE RAMP BACKWARDS*
+***********************************/
 
             /**
-             * MIKE
-             * NOTE THAT SOMETIMES WE HIT THE WALL OF THE
-             *CHILLER AND END UP TURNING AT THE TOP OF THE RAMP
-             */
+* MIKE
+* NOTE THAT SOMETIMES WE HIT THE WALL OF THE
+*CHILLER AND END UP TURNING AT THE TOP OF THE RAMP
+*/
 
             reverseToWallHigh();
             int count2=0;
@@ -685,11 +700,11 @@ reverseToWall();
             rightMotor.SetPercent(0);
 
             /**
-              ******************************
-             *MIKE ADD CODE TO CHECK IF WE
-             *ARE FACING NORTH(0) TO GO
-             *BACKWARDS INTO THE WALL OPPOSITE OF THE SKID
-            ***********************************/
+******************************
+*MIKE ADD CODE TO CHECK IF WE
+*ARE FACING NORTH(0) TO GO
+*BACKWARDS INTO THE WALL OPPOSITE OF THE SKID
+***********************************/
 
             reverseToWall();
 
@@ -699,34 +714,34 @@ reverseToWall();
             reverseToWall();
 
             /**
-              WE SHOULD BE HITTING THE OVEN AT THIS POINT BUT
-              THE ROBOT HEADS TO THE CHARGER INSTEAD AND WE
-              ARE LEAVING IT AS SO FOR NOW BECAUSE
-              IT STILL GETS US 8 POINTS*/
+WE SHOULD BE HITTING THE OVEN AT THIS POINT BUT
+THE ROBOT HEADS TO THE CHARGER INSTEAD AND WE
+ARE LEAVING IT AS SO FOR NOW BECAUSE
+IT STILL GETS US 8 POINTS*/
 /*
-            driveForward(1);
-            pivotLeftTurnRPS();
-            reverseToWall();
-            driveForward(4);
-            pivotLeftTurnRPS();
-            //Pushing the oven button
-            int oven = RPS.Oven();
-            driveForward(6);
-            int count=1;
-            while(count<oven&&count<3)
-            {
-                driveBackward(2);
-                driveForward(3);
-                count++;
-            }
-            //Reverse in front of charger
-            driveBackward(4);
-            pivotRightTurnRPS();
-            reverseToWall();
-            //Turn away from charger and then reverse into it
-            driveForward(2);
-            pivotRightTurnRPS();
-            reverseToWall();
+driveForward(1);
+pivotLeftTurnRPS();
+reverseToWall();
+driveForward(4);
+pivotLeftTurnRPS();
+//Pushing the oven button
+int oven = RPS.Oven();
+driveForward(6);
+int count=1;
+while(count<oven&&count<3)
+{
+driveBackward(2);
+driveForward(3);
+count++;
+}
+//Reverse in front of charger
+driveBackward(4);
+pivotRightTurnRPS();
+reverseToWall();
+//Turn away from charger and then reverse into it
+driveForward(2);
+pivotRightTurnRPS();
+reverseToWall();
 */
 
             LCD.WriteLine(TimeNow()-veryStart);
