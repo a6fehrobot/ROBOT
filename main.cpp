@@ -355,7 +355,8 @@ int main(void)
     while(true)
     {
         // Wait for the left button to be pressed before starting
-        while(backButtonRight.Value()==1);
+        while(!buttons.MiddlePressed());
+        while(buttons.MiddlePressed());
         //goto segment4;
 
         //SEgment one will pick up the skid
@@ -363,7 +364,7 @@ int main(void)
             //liftHeight(2);
         liftHeight(0);
         liftMotor.SetPercent(-40);
-        Sleep(.05);
+        Sleep(.2);
         liftMotor.Stop();
 
             // Move into waitForCdS()
@@ -403,11 +404,22 @@ int main(void)
             // CHECK RPS Y
 
             pivotRightTurnRPS();
+
+            /**
+              ******************************
+             *MIKE ADD CODE TO CHECK IF WE
+             *ARE FACING EAST(90) TO GO
+             *TOWARDS THE PIN*
+            ***********************************/
+
+
+
             driveForward(7.0); //Should catch on the pipe
             //Make sure we don't hit the tube the whole time
             Sleep(.2);
             driveBackward(-1);
-            Sleep(.2);
+            Sleep(.25);
+            stop();
             //Pull the pin
             liftMotor.SetPercent(-50);
             Sleep(1.2); //From .87
@@ -443,16 +455,30 @@ int main(void)
             liftMotor.SetPercent(-40);
             takeBreak();
 
-            //Navigate down ramp and yada yada step 9
+            //Navigate to ramp and yada yada step 9
             driveBackward(12);
             liftMotor.SetPercent(0);
             pivot(1, -1);
+            /**
+              ******************************
+             *MIKE ADD CODE TO CHECK IF WE
+             *ARE FACING EAST(90) TO GO
+             *TOWARDS THE CENTER OF THE COURSE BACKWARDS*
+            ***********************************/
             stop();
             driveForward(9); //Now in the center
             takeBreak();
 
             //pivot(0, -2); //Turn so as to go down ramp
             pivot(1);
+
+            /**
+              ******************************
+             *MIKE ADD CODE TO CHECK IF WE
+             *ARE FACING SOUTH(0) TO GO
+             *TOWARDS THE SWITCH BACKWARDS*
+            ***********************************/
+
             driveBackward(-1);
             //Reverse to wall and if stuck move the right motor back
             startTime = TimeNow();
@@ -463,6 +489,13 @@ int main(void)
 
             driveForward(4);
             pivotRightTurnRPS(); pivotRightTurnRPS(); leftMotor.SetPercent(50); Sleep(.7); stop();
+
+            /**
+              ******************************
+             *MIKE ADD CODE TO CHECK IF WE
+             *ARE FACING NORTH(0) TO GO
+             *DOWN THE RAMP BACKWARDS*
+            ***********************************/
 
 
             //goto menu; //Segment 2 will Read the light
@@ -586,6 +619,20 @@ reverseToWall();
             //Drive up ramp step 48
             driveForward(8);
             pivotRightTurnRPS(); pivotRightTurnRPS(); leftMotor.SetPercent(50); Sleep(.4); stop();
+
+            /**
+              ******************************
+             *MIKE ADD CODE TO CHECK IF WE
+             *ARE FACING SOUTH(0) TO GO
+             *UP THE RAMP BACKWARDS*
+            ***********************************/
+
+            /**
+             * MIKE
+             * NOTE THAT SOMETIMES WE HIT THE WALL OF THE
+             *CHILLER AND END UP TURNING AT THE TOP OF THE RAMP
+             */
+
             reverseToWallHigh();
             int count2=0;
             if(backButtonRight.Value()==1&&backButtonLeft.Value()==0)
@@ -628,10 +675,18 @@ reverseToWall();
 
             //Need to test this area more
 
-            driveBackward(10);
+            driveBackward(7);
             rightMotor.SetPercent(-60);
             Sleep(1.1);
             rightMotor.SetPercent(0);
+
+            /**
+              ******************************
+             *MIKE ADD CODE TO CHECK IF WE
+             *ARE FACING NORTH(0) TO GO
+             *BACKWARDS INTO THE WALL OPPOSITE OF THE SKID
+            ***********************************/
+
             reverseToWall();
 
 
@@ -639,6 +694,12 @@ reverseToWall();
             pivotRightTurnRPS();
             reverseToWall();
 
+            /**
+              WE SHOULD BE HITTING THE OVEN AT THIS POINT BUT
+              THE ROBOT HEADS TO THE CHARGER INSTEAD AND WE
+              ARE LEAVING IT AS SO FOR NOW BECAUSE
+              IT STILL GETS US 8 POINTS*/
+/*
             driveForward(1);
             pivotLeftTurnRPS();
             reverseToWall();
@@ -662,7 +723,7 @@ reverseToWall();
             driveForward(2);
             pivotRightTurnRPS();
             reverseToWall();
-
+*/
 
             LCD.WriteLine(TimeNow()-veryStart);
             }
