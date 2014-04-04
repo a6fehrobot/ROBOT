@@ -355,13 +355,16 @@ int main(void)
     while(true)
     {
         // Wait for the left button to be pressed before starting
-        while(!backButtonRight.Value()==0);
-        while(buttons.MiddlePressed()==1);
+        while(backButtonRight.Value()==1);
         //goto segment4;
 
         //SEgment one will pick up the skid
         //segment1:
-            liftHeight(1);
+            //liftHeight(2);
+        liftHeight(0);
+        liftMotor.SetPercent(-40);
+        Sleep(.05);
+        liftMotor.Stop();
 
             // Move into waitForCdS()
             nolight = cds.Value(); //Wait for the light
@@ -372,9 +375,7 @@ int main(void)
             }
 
             double veryStart = TimeNow();
-            liftMotor.SetPercent(50);
-            Sleep(.6);
-            liftMotor.Stop();
+
 
             // Drive to in front of the skid Step 1
             driveForward(35.0);
@@ -402,11 +403,14 @@ int main(void)
             // CHECK RPS Y
 
             pivotRightTurnRPS();
-            driveForward(6.0); //Should catch on the pipe
-
+            driveForward(7.0); //Should catch on the pipe
+            //Make sure we don't hit the tube the whole time
+            Sleep(.2);
+            driveBackward(-1);
+            Sleep(.2);
             //Pull the pin
             liftMotor.SetPercent(-50);
-            Sleep(.87);
+            Sleep(1.2); //From .87
             driveBackward(2);
             liftMotor.SetPercent(0);
             takeBreak();
@@ -440,7 +444,7 @@ int main(void)
             takeBreak();
 
             //Navigate down ramp and yada yada step 9
-            driveBackward(10);
+            driveBackward(12);
             liftMotor.SetPercent(0);
             pivot(1, -1);
             stop();
@@ -449,7 +453,14 @@ int main(void)
 
             //pivot(0, -2); //Turn so as to go down ramp
             pivot(1);
-            reverseToWall();
+            driveBackward(-1);
+            //Reverse to wall and if stuck move the right motor back
+            startTime = TimeNow();
+            while(backButtonRight.Value() == 1 && backButtonLeft.Value() == 1)
+            {
+                if(TimeNow()-startTime>.5) {stop(); rightMotor.SetPercent(-40); Sleep(1.4); stop(); break;}
+            }
+
             driveForward(4);
             pivotRightTurnRPS(); pivotRightTurnRPS(); leftMotor.SetPercent(50); Sleep(.7); stop();
 
@@ -526,22 +537,32 @@ int main(void)
             Sleep(.3);
 
             //Get to the front corner of the shop
-            driveForward(1);
+            driveForward(5);
             pivotLeftTurnRPS();
             reverseToWall();
-/*
+            //Now corner check
+            driveForward(5);
+            pivotRightTurn();
+            reverseToWall();
+            //Get back to the correct wall
+            driveForward(2);
+            pivotLeftTurn();
+            reverseToWall();
+
+
 rightMotor.SetPercent(50);
 Sleep(.7);
-driveForward(10);
+driveForward(9);
 rightMotor.SetPercent(-50);
-Sleep(.7);
+Sleep(.75);
 reverseToWall();
-*/
+
             //deposit scoop step 37 CORNER
-             driveForward(5);
+            //if(blue)
+            driveForward(5);
             //else driveForward(23);
-            liftHeight(15);
-            //liftMotor.SetPercent(-60); Sleep(1.2); liftMotor.SetPercent(0);
+            //liftHeight(15);
+            liftMotor.SetPercent(-60); Sleep(1.2); liftMotor.SetPercent(0);
             reverseToWall();
 
             liftHeight(0);
@@ -564,12 +585,20 @@ reverseToWall();
             Sleep(.5);
             //Drive up ramp step 48
             driveForward(8);
-            pivotRightTurnRPS(); pivotRightTurnRPS(); leftMotor.SetPercent(50); Sleep(.2); stop();
+            pivotRightTurnRPS(); pivotRightTurnRPS(); leftMotor.SetPercent(50); Sleep(.4); stop();
             reverseToWallHigh();
+            int count2=0;
+            if(backButtonRight.Value()==1&&backButtonLeft.Value()==0)
+            {
+                rightMotor.SetPercent(50); Sleep(.7); rightMotor.SetPercent(0);
+                driveForward(4);
+                rightMotor.SetPercent(-50); Sleep(.7); rightMotor.SetPercent(0);
+                reverseToWall();
+            }
 
             //Position ourselves in front of switch
-            int count2=0;
-            while((backButtonLeft.Value() == 1 || backButtonRight.Value() == 1) && count2 < 1)
+
+            else if((backButtonLeft.Value() == 1 || backButtonRight.Value() == 1) && count2 < 1)
             {
 
                 leftMotor.SetPercent(50);
@@ -600,7 +629,7 @@ reverseToWall();
             //Need to test this area more
 
             driveBackward(10);
-            rightMotor.SetPercent(-40);
+            rightMotor.SetPercent(-60);
             Sleep(1.1);
             rightMotor.SetPercent(0);
             reverseToWall();
