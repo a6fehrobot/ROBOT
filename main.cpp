@@ -364,7 +364,7 @@ int main(void)
             //liftHeight(2);
         liftHeight(0);
         liftMotor.SetPercent(-40);
-        Sleep(.2);
+        Sleep(.5);
         liftMotor.Stop();
 
             // Move into waitForCdS()
@@ -387,13 +387,13 @@ int main(void)
             reverseToWall();
 
             startTime = TimeNow();
-            while(TimeNow()-startTime<8.0) { //Line up Set distance from pin
+            while(TimeNow()-startTime<10.0) { //Line up Set distance from pin
                 if(backButtonLeft.Value() == 1 && backButtonRight.Value() == 0) { Sleep(.8); stop(); break; }
                 else if(backButtonLeft.Value() == 1 && backButtonRight.Value() == 1) { driveBackward(0); LCD.WriteLine("WHY!"); }
                 else if(backButtonLeft.Value() == 0 && backButtonRight.Value() == 0) {
                     LCD.WriteLine("DrivingLoop");
-                    driveForward(2);
-                    leftMotor.SetPercent(50); Sleep(.2);
+                    driveForward(3);
+                    leftMotor.SetPercent(50); Sleep(.3);
                     driveBackward(0);
                     Sleep(.4);
                 }
@@ -405,8 +405,8 @@ int main(void)
 
             pivotRightTurnRPS();
 
-            startTime=TimeNow();
-            while(std::abs(RPS.Heading()-90)>7&&TimeNow()-startTime<.4)
+            startTime = TimeNow();
+            while(std::abs(RPS.Heading()-90)>7&&TimeNow()-startTime<5.0 )
             {
                 if(RPS.Heading()>90)
                 {
@@ -418,8 +418,8 @@ int main(void)
                     leftMotor.SetPercent(-40);
                     rightMotor.SetPercent(40);
                 }
-                stop();
             }
+            stop();
             /**
 ******************************
 *MIKE ADD CODE TO CHECK IF WE
@@ -429,7 +429,7 @@ int main(void)
 
 
 
-            driveForward(7.0); //Should catch on the pipe
+            driveForward(5.0); //Should catch on the pipe
             //Make sure we don't hit the tube the whole time
             Sleep(.2);
             driveBackward(-1);
@@ -441,7 +441,7 @@ int main(void)
             driveBackward(2);
             liftMotor.SetPercent(0);
             takeBreak();
-            pivotLeftTurnRPS();
+            pivotLeftTurn();
 
             //Lower lift to help pick up skid
             liftHeight(0);
@@ -456,7 +456,7 @@ int main(void)
                 else if(backButtonLeft.Value() == 0 && backButtonRight.Value() == 0) {
                     LCD.WriteLine("DrivingLoop");
                     driveForward(2);
-                    leftMotor.SetPercent(50); Sleep(.2);
+                    leftMotor.SetPercent(60); Sleep(.4);
                     driveBackward(0);
                     Sleep(.4);
                 }
@@ -473,7 +473,7 @@ int main(void)
             //Navigate to ramp and yada yada step 9
             driveBackward(12);
             liftMotor.SetPercent(0);
-            pivot(1, -1);
+            pivotLeftTurn();
             /**
 ******************************
 *MIKE ADD CODE TO CHECK IF WE
@@ -513,7 +513,7 @@ int main(void)
 ***********************************/
 
             liftMotor.SetPercent(30);
-            Sleep(.4);
+            Sleep(.3);
             liftMotor.Stop();
 
 
@@ -577,7 +577,7 @@ int main(void)
 
             //liftHeight(9);
             liftMotor.SetPercent(-50);
-            Sleep(.6);
+            Sleep(.9);
             liftMotor.SetPercent(0);
             driveForward(12);
 
@@ -594,19 +594,19 @@ int main(void)
             reverseToWall();
             //Now corner check
             driveForward(5);
-            pivotRightTurn();
+            pivotRightTurnRPS();
             reverseToWall();
             //Get back to the correct wall
             driveForward(2);
-            pivotLeftTurn();
+            pivotLeftTurnRPS();
             reverseToWall();
 
 
 rightMotor.SetPercent(50);
-Sleep(.7);
-driveForward(11);
+Sleep(.8); // prev 0.7
+driveForward(9);
 rightMotor.SetPercent(-50);
-Sleep(.75);
+Sleep(.95); // prev 0.75
 reverseToWall();
 
             //deposit scoop step 37 CORNER
