@@ -418,7 +418,7 @@ int main(void)
             //Make sure we don't hit the tube the whole time
             Sleep(.2);
             driveBackward(-1);
-            Sleep(.25);
+            Sleep(.1);
             stop();
             //Pull the pin
             liftMotor.SetPercent(-50);
@@ -484,7 +484,7 @@ int main(void)
             startTime = TimeNow();
             while(backButtonRight.Value() == 1 && backButtonLeft.Value() == 1)
             {
-                if(TimeNow()-startTime>.5) {stop(); rightMotor.SetPercent(-40); Sleep(1.4); stop(); break;}
+                if(TimeNow()-startTime>1) {stop(); rightMotor.SetPercent(-40); Sleep(1.4); stop(); break;}
             }
 
             driveForward(4);
@@ -496,6 +496,10 @@ int main(void)
              *ARE FACING NORTH(0) TO GO
              *DOWN THE RAMP BACKWARDS*
             ***********************************/
+
+            liftMotor.SetPercent(30);
+            Sleep(.4);
+            liftMotor.Stop();
 
 
             //goto menu; //Segment 2 will Read the light
@@ -556,14 +560,14 @@ int main(void)
 
             driveBackward(4);
 
-            liftHeight(9);
-            //liftMotor.SetPercent(-50);
-            //Sleep(.6);
-            //liftMotor.Set,Percent(0);
+            //liftHeight(9);
+            liftMotor.SetPercent(-50);
+            Sleep(.6);
+            liftMotor.SetPercent(0);
             driveForward(12);
 
             //move to corner to begin scoop dropping step 33
-            reverseToWall(); //Skid is all good
+            reverseToWall(); //Skid is all good and we are on the opposite wall
 
             //goto menu; //End segment3
             //segment4:
