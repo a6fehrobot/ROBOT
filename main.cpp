@@ -387,7 +387,7 @@ int main(void)
             reverseToWall();
 
             startTime = TimeNow();
-            while(TimeNow()-startTime<10.0) { //Line up Set distance from pin
+            while(TimeNow()-startTime<1.0) { //Line up Set distance from pin
                 if(backButtonLeft.Value() == 1 && backButtonRight.Value() == 0) { Sleep(.8); stop(); break; }
                 else if(backButtonLeft.Value() == 1 && backButtonRight.Value() == 1) { driveBackward(0); LCD.WriteLine("WHY!"); }
                 else if(backButtonLeft.Value() == 0 && backButtonRight.Value() == 0) {
@@ -610,11 +610,11 @@ Sleep(.95); // prev 0.75
 reverseToWall();
 
             //deposit scoop step 37 CORNER
-            //if(blue)
+            if(blue)
             driveForward(5);
-            //else driveForward(23);
-            //liftHeight(15);
-            liftMotor.SetPercent(-60); Sleep(1.2); liftMotor.SetPercent(0);
+            else driveForward(23);
+            liftHeight(15);
+            liftMotor.SetPercent(-80); Sleep(0.9); liftMotor.SetPercent(0);
             reverseToWall();
 
             liftHeight(0);
@@ -696,7 +696,7 @@ reverseToWall();
 
             driveBackward(7);
             rightMotor.SetPercent(-60);
-            Sleep(1.1);
+            Sleep(0.8);
             rightMotor.SetPercent(0);
 
             /**
@@ -709,9 +709,15 @@ reverseToWall();
             reverseToWall();
 
 
+            
             driveForward(7);
             pivotRightTurnRPS();
-            reverseToWall();
+            
+            Sleep(0.8);
+            
+            //rightMotor.SetPercent(-40);
+            
+            reverseToWallHigh();
 
             /**
 WE SHOULD BE HITTING THE OVEN AT THIS POINT BUT
