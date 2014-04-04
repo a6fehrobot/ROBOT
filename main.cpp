@@ -400,7 +400,7 @@ int main(void)
             }
 
 
-            driveForward(1.0);
+            driveForward(1.5);
             // CHECK RPS Y
 
             pivotRightTurnRPS();
@@ -589,7 +589,7 @@ int main(void)
 
 rightMotor.SetPercent(50);
 Sleep(.7);
-driveForward(9);
+driveForward(11);
 rightMotor.SetPercent(-50);
 Sleep(.75);
 reverseToWall();
