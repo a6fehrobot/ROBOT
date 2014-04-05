@@ -293,6 +293,16 @@ void reverseToWall()
     stop();
 }
 
+void reverseToWallBoth()
+{
+    driveBackward(0);
+    while(backButtonRight.Value() == 1 && backButtonLeft.Value() == 1) {
+    }
+    Sleep(.9);
+    stop();
+}
+
+
 void reverseToWallHigh()
 {
     leftMotor.SetPercent(-78); rightMotor.SetPercent(-78);
@@ -339,8 +349,8 @@ int main(void)
     LCD.SetFontColor(FEHLCD::White);
 
     // Initialize the positioning system
-    RPS.InitializeMenu();
-    RPS.Enable();
+     RPS.InitializeMenu();
+     RPS.Enable();
 
 
 
@@ -358,6 +368,16 @@ int main(void)
         while(!buttons.MiddlePressed());
         while(buttons.MiddlePressed());
         //goto segment4;
+
+//        while( true )
+//        {
+//            if( buttons.MiddlePressed() )
+//            {
+//                while(buttons.MiddlePressed());
+//                LCD.WriteLine(cds.Value());
+//            }
+//        }
+//        return 0;
 
         //SEgment one will pick up the skid
         //segment1:
@@ -383,7 +403,7 @@ int main(void)
             // RPS CHECK X
 
             //Turn and use the opposite skid wall as a lining up tool
-            pivotLeftTurnRPS();
+            pivotLeftTurn();
             reverseToWall();
 
             startTime = TimeNow();
@@ -403,23 +423,23 @@ int main(void)
             driveForward(1.5);
             // CHECK RPS Y
 
-            pivotRightTurnRPS();
+            pivotRightTurn();
 
-            startTime = TimeNow();
-            while(std::abs(RPS.Heading()-90)>7&&TimeNow()-startTime<5.0 )
-            {
-                if(RPS.Heading()>90)
-                {
-                    leftMotor.SetPercent(40);
-                    rightMotor.SetPercent(-40);
-                }
-                else
-                {
-                    leftMotor.SetPercent(-40);
-                    rightMotor.SetPercent(40);
-                }
-            }
-            stop();
+//            startTime = TimeNow();
+//            while(std::abs(RPS.Heading()-90)>7&&TimeNow()-startTime<5.0 )
+//            {
+//                if(RPS.Heading()>90)
+//                {
+//                    leftMotor.SetPercent(40);
+//                    rightMotor.SetPercent(-40);
+//                }
+//                else
+//                {
+//                    leftMotor.SetPercent(-40);
+//                    rightMotor.SetPercent(40);
+//                }
+//            }
+//            stop();
             /**
 ******************************
 *MIKE ADD CODE TO CHECK IF WE
@@ -430,18 +450,27 @@ int main(void)
 
 
             driveForward(5.0); //Should catch on the pipe
+            stop();
+
+            leftMotor.SetPercent(40);
+            Sleep(0.2);
+            stop();
+
             //Make sure we don't hit the tube the whole time
             Sleep(.2);
-            driveBackward(-1);
+            driveBackward(0);
             Sleep(.1);
             stop();
+
             //Pull the pin
-            liftMotor.SetPercent(-50);
+            liftMotor.SetPercent(-44); //from -50
             Sleep(1.2); //From .87
             driveBackward(2);
             liftMotor.SetPercent(0);
             takeBreak();
             pivotLeftTurn();
+
+            stop();
 
             //Lower lift to help pick up skid
             liftHeight(0);
@@ -456,18 +485,18 @@ int main(void)
                 else if(backButtonLeft.Value() == 0 && backButtonRight.Value() == 0) {
                     LCD.WriteLine("DrivingLoop");
                     driveForward(2);
-                    leftMotor.SetPercent(60); Sleep(.4);
+                    leftMotor.SetPercent(60); Sleep(.3);
                     driveBackward(0);
                     Sleep(.4);
                 }
             }
 
-            rightMotor.SetPercent(40); Sleep(.1);
+            rightMotor.SetPercent(40); Sleep(.1); //was .2
             rightMotor.SetPercent(0);
 
             //Pick up skid step 6
             driveForward(17);
-            liftMotor.SetPercent(-40);
+            liftMotor.SetPercent(-46);
             takeBreak();
 
             //Navigate to ramp and yada yada step 9
@@ -503,7 +532,7 @@ int main(void)
             }
 
             driveForward(4);
-            pivotRightTurnRPS(); pivotRightTurnRPS(); leftMotor.SetPercent(50); Sleep(.7); stop();
+            pivotRightTurn(); pivotRightTurn(); leftMotor.SetPercent(50); Sleep(.7); stop();
 
             /**
 ******************************
@@ -512,9 +541,9 @@ int main(void)
 *DOWN THE RAMP BACKWARDS*
 ***********************************/
 
-            liftMotor.SetPercent(30);
-            Sleep(.3);
-            liftMotor.Stop();
+//            liftMotor.SetPercent(30);
+//            Sleep(.2);
+//            liftMotor.Stop();
 
 
             //goto menu; //Segment 2 will Read the light
@@ -552,7 +581,7 @@ int main(void)
 //segment3:
             Sleep(.5);
             driveForward(2);
-            pivotRightTurnRPS();
+            pivotRightTurn();
             reverseToWall();
 
             //Check if we hit the chiller door and messed up that way
@@ -565,7 +594,7 @@ int main(void)
             }
 
             driveForward(.5);
-            pivotLeftTurnRPS(); //Now I'm facing the chiller
+            pivotLeftTurn(); //Now I'm facing the chiller
             reverseToWall();
 
             //Deposit skid in chiller step 28
@@ -590,15 +619,15 @@ int main(void)
 
             //Get to the front corner of the shop
             driveForward(5);
-            pivotLeftTurnRPS();
+            pivotLeftTurn();
             reverseToWall();
             //Now corner check
             driveForward(5);
-            pivotRightTurnRPS();
+            pivotRightTurn();
             reverseToWall();
             //Get back to the correct wall
-            driveForward(2);
-            pivotLeftTurnRPS();
+            driveForward(3);
+            pivotLeftTurn();
             reverseToWall();
 
 
@@ -612,7 +641,7 @@ reverseToWall();
             //deposit scoop step 37 CORNER
             if(blue)
             driveForward(5);
-            else driveForward(23);
+            else driveForward(20);
             liftHeight(15);
             liftMotor.SetPercent(-80); Sleep(0.9); liftMotor.SetPercent(0);
             reverseToWall();
@@ -620,6 +649,7 @@ reverseToWall();
             liftHeight(0);
 
             //Get away from corner step 40 CAN USE RPS TO FIND 90 DEGREES HERE
+
             leftMotor.SetPercent(50);
             Sleep(1.4);
             driveForward(6);
@@ -627,17 +657,23 @@ reverseToWall();
             Sleep(1.1);
             reverseToWall();
 
+//            leftMotor.SetPercent(-50); Sleep(0.6);
+//            leftMotor.SetPercent(0);
+
             //Line up to ramp step 44
             driveForward(12);
-            pivotRightTurnRPS();
+            pivotRightTurn();
+
+
             reverseToWall();
+            reverseToWallBoth();
 
             //goto menu;
             //segment5:
             Sleep(.5);
             //Drive up ramp step 48
             driveForward(8);
-            pivotRightTurnRPS(); pivotRightTurnRPS(); leftMotor.SetPercent(50); Sleep(.4); stop();
+            pivotRightTurn(); pivotRightTurn(); leftMotor.SetPercent(50); Sleep(.4); stop();
 
             /**
 ******************************
@@ -686,11 +722,11 @@ reverseToWall();
 
             //Turn to face the switch
             driveForward(4);
-            pivotLeftTurnRPS(); pivotLeftTurnRPS(); stop();
+            pivotLeftTurn(); pivotLeftTurn(); stop();
 
             //Drive to switch then turn it
-            driveForward(8);
-            pivotLeftTurnRPS();
+            driveForward(9);
+            pivotLeftTurn();
 
             //Need to test this area more
 
@@ -699,24 +735,28 @@ reverseToWall();
             Sleep(0.8);
             rightMotor.SetPercent(0);
 
-            /**
-******************************
-*MIKE ADD CODE TO CHECK IF WE
+/******************************
+0*MIKE ADD CODE TO CHECK IF WE
+                    /**
 *ARE FACING NORTH(0) TO GO
 *BACKWARDS INTO THE WALL OPPOSITE OF THE SKID
 ***********************************/
 
-            reverseToWall();
+          //  reverseToWall();
 
 
-            
-            driveForward(7);
-            pivotRightTurnRPS();
-            
+
+            //driveBackward(14);
+            pivotRightTurn();
+
+            rightMotor.SetPercent(-40);
+            Sleep(1.0);
+            rightMotor.SetPercent(0);
+
             Sleep(0.8);
-            
+
             //rightMotor.SetPercent(-40);
-            
+
             reverseToWallHigh();
 
             /**
